@@ -33,6 +33,7 @@ const Joystick = (props) => {
       let x = event.translationX;
       let y = event.translationY;
 
+      
       offsetX.value = x < -120 ? -120 : x > 120 ? 120 : x;
       offsetY.value = y < -80 ? -80 : y > 80 ? 80 : y;
 
@@ -67,6 +68,7 @@ const Joystick = (props) => {
       <View style={styles.container}></View>
       <View style={styles.controlArea}>
         <GestureDetector gesture={pan}>
+        
           <Animated.View style={[styles.circle, animatedStyles]} />
         </GestureDetector>
       </View>
@@ -87,7 +89,7 @@ const styles = StyleSheet.create({
     backgroundColor: "lightgray",
     borderRadius: 10,
     height: 160,
-    width: "70%",
+    width: "30%",
     marginBottom: 10,
     marginLeft: 10,
   },

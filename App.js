@@ -1,11 +1,14 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { SafeAreaView,  StyleSheet, Text, View } from "react-native";
 import { Constants } from "expo-constants";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { SafeAreaProvider, initialWindowMetrics } from 'react-native-safe-area-context';
+
 import 'react-native-gesture-handler';
+
 
 const Tabs = createBottomTabNavigator();
 
@@ -16,10 +19,17 @@ import { colors } from "./utils/colors";
 
 export default function App() {
   return (
+    <SafeAreaProvider initialMetrics={initialWindowMetrics} style={{flex: 1, backgroundColor: "red"}}>
+
+    
+    {/* <SafeAreaView style={{flex: 1, backgroundColor: "#00000"}} > */}
+
+
+     
     <View style={styles.container}>
-      <StatusBar style="auto" />
+      <StatusBar  />
       <NavigationContainer>
-        <Tabs.Navigator>
+        <Tabs.Navigator screenOptions={{ headerShown: false }} >
           <Tabs.Screen
             name="Manual"
             component={Command}
@@ -51,6 +61,7 @@ export default function App() {
         </Tabs.Navigator>
       </NavigationContainer>
     </View>
+    </SafeAreaProvider>
   );
 }
 

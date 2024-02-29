@@ -28,10 +28,10 @@ export default class Command extends Component {
     const value = parseInt( Math.abs(values.y))
     try {
       console.log(value)
-      const response = await axios.post(`http://192.168.108.226/propulstion?speed=${value}`, { value: 120 }, { timeout: 5000 });
+      // const response = await axios.post(`http://192.168.108.226/propulstion?speed=${value}`, { value: 120 }, { timeout: 5000 });
       // console.log(response.data);
     } catch (error) {
-      console.error("AxiosError:", error);
+      // console.error("AxiosError:", error);
     }
    
 
@@ -51,7 +51,10 @@ export default class Command extends Component {
       <View style={styles.container}>
         <View>
           <Text>Boat Params</Text>
-          <Text>https://youtu.be/duJkeYCjwBE?si=6EZRGtyKHqb2MMc_</Text>
+          <Text> { this.state.joystick.propulsion } </Text>
+          <Text> { this.state.joystick.direction } </Text>
+
+          {/* <Text>https://youtu.be/duJkeYCjwBE?si=6EZRGtyKHqb2MMc_</Text> */}
           <View>
             <FontAwesome5
               name="temperature-high"

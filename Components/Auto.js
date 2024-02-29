@@ -5,7 +5,7 @@ export default class Auto extends Component {
   render() {
     return (
       <View>
-        <Text>Auto</Text>
+        <Text>Autoxwkhv xkhwckjxhcxw</Text>
       </View>
     )
   }
