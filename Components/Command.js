@@ -1,10 +1,15 @@
-import { StyleSheet, Text, View } from "react-native";
 import React, { Component } from "react";
-import Joystick from "./Controller/Joystick";
+import { View, StyleSheet, Text } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { updateSpeed } from "../api/updateDirection";
-
+import Action from "./Controller/Action";
+import Joystick from "./Controller/Joystick";
+import { colors } from "../utils/colors";
 import axios from "axios";
+import { debounce } from 'lodash';
+import GameContext from "../contexts/GameContext";
+import SpeedometerComponent from "./Controller/Speedometer";
+
+
 
 export default class Command extends Component {
   constructor() {
@@ -20,52 +25,91 @@ export default class Command extends Component {
     };
 
     this.onSpeedUpChange = this.onSpeedUpChange.bind(this);
+    this.sendRequest = debounce(this.sendRequest, 500); 
+    
+    this.gameContext = GameContext; // Access the IP context
+
+    this.actions = [
+      {
+        name: "C",
+        // icon: <FontAwesome5 name="horn" size={24} color={colors.text} />,
+        activeAction: () => console.log("Claxonner activé"),
+        inactiveAction: () => console.log("Claxonner désactivé"),
+      },
+      {
+        name: "Allumer les feux",
+        icon: <FontAwesome5 name="lightbulb" size={24} color={colors.text} />,
+        activeAction: async () => await axios.post(`${this.context.url }/clacks?state=1`, { state: 1 }, { timeout: 5000 }),
+        inactiveAction:  async  () => await axios.post(`${this.context.url }/clacks?state=0`, { state: 0 }, { timeout: 5000 }),
+      },
+    ];
   }
 
-  async onSpeedUpChange(values) {
-   
+  static contextType = GameContext;
 
-    const value = parseInt( Math.abs(values.y))
+  async onSpeedUpChange(values) {
+ 
+    
+    this.sendRequest(values);
+  }
+
+  async sendRequest(values) {
+    const value = Math.abs(values.y);
+    const dir = parseInt(Math.abs(values.x));
+
+    this.setState({
+      speed : value, 
+      direction: dir, 
+    });
+  
     try {
-      console.log(value)
-      // const response = await axios.post(`http://192.168.108.226/propulstion?speed=${value}`, { value: 120 }, { timeout: 5000 });
+      console.log("y :", value, "Yold : ", this.state.joystick.propulsion);
+      const gap = Math.abs(value - Math.abs(this.state.joystick.propulsion));
+      console.log("gapY : ", gap);
+      console.log("x :", dir, 'Xold :', this.state.joystick.direction);
+      const gap2 = Math.abs(dir - Math.abs(this.state.joystick.direction));
+      console.log("gapX : ", gap2);
+      if (gap > 0.8) {
+        console.log("action inited");
+        const propulsionRequest = axios.post(`${this.context.url}/propulsion?speed=${parseInt(value)}`, { value: parseInt(value) }, { timeout: 5000 });
+        const directionRequest = axios.post(`${this.context.url}/direction?value=${dir}`, { value: dir }, { timeout: 5000 });
+        const [propulsionResponse, directionResponse] = await Promise.all([propulsionRequest, directionRequest]);
+      }
       // console.log(response.data);
     } catch (error) {
       // console.error("AxiosError:", error);
     }
-   
-
+  
     this.setState({
       joystick: {
-        propulsion:  values.y,
+        propulsion: values.y,
         direction: values.x,
-        pressed: values.presseds
+        pressed: values.presseds,
       },
       pressed: values.pressed,
     });
-    
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <View>
-          <Text>Boat Params</Text>
-          <Text> { this.state.joystick.propulsion } </Text>
-          <Text> { this.state.joystick.direction } </Text>
-
-          {/* <Text>https://youtu.be/duJkeYCjwBE?si=6EZRGtyKHqb2MMc_</Text> */}
-          <View>
-            <FontAwesome5
-              name="temperature-high"
-              size={24}
-              color="rgba(39, 176, 245, 1)"
+        <View style={styles.actionsContainer}>
+          {this.actions.map((action, index) => (
+            <Action
+              key={index}
+              name={action.name}
+              icon={action.icon}
+              activeAction={action.activeAction}
+              inactiveAction={action.inactiveAction}
             />
-            <Text> 20 °C</Text>
-          </View> 
+          ))}
         </View>
-        <Text>{this.state.joystick.propulsion}</Text>
-        <Joystick onChange={this.onSpeedUpChange} />
+        <View style={styles.joystickContainer}>
+          {/* <Text style={styles.text}>Boat Params</Text>
+          <Text style={styles.text}>{this.state.joystick.direction}</Text> */}
+          <Joystick onChange={this.onSpeedUpChange} />
+           <SpeedometerComponent speed={Math.abs(this.state.speed.propulsion || 0)} /> 
+        </View>
       </View>
     );
   }
@@ -74,7 +118,28 @@ export default class Command extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "rgba(39, 176, 245, 0.05)",
-    opacity: 0.9,
+    paddingTop: 10,
+    backgroundColor: colors.main,
+    color: colors.text,
+    opacity: 0.98,
+    flexDirection: "column",
+    padding: 5,
+  },
+  actionsContainer: {
+    flex: 1,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "",
+    alignItems: "center",
+  },
+  joystickContainer: {
+    flex: 1,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "",
+    alignItems: "center",
+  },
+  text: {
+    color: colors.text,
   },
 });
