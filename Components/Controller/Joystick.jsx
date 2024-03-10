@@ -1,5 +1,5 @@
 import "react-native-gesture-handler";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import Animated, {
   runOnJS,
@@ -14,12 +14,24 @@ import {
   GestureHandlerRootView,
 } from "react-native-gesture-handler";
 import { colors } from "../../utils/colors";
+import GameContext from "../../contexts/GameContext";
 
 const Joystick = (props) => {
   const pressed = useSharedValue(false);
   const offsetX = useSharedValue(0);
   const offsetY = useSharedValue(0);
   const [values, setValues] = useState(0);
+  const context = useContext(GameContext);
+
+  useEffect( () => {
+    // console.log("hand :", context.handsOn)
+    // console.log("pressed :", pressed)
+    if(!context.handsOn && !pressed.value){
+      offsetX.value = 0;
+      offsetY.value = 0;
+      props.onChange({ x: 0, y: 0, pressed: false })
+    }
+  }, [context.handsOn] )
 
   const pan = Gesture.Pan()
     .onBegin(() => {
@@ -31,8 +43,8 @@ const Joystick = (props) => {
       });
     })
     .onChange((event) => {
-      let x = event.translationX;
-      let y = event.translationY;
+      let x = event.absoluteX - 185/2;
+      let y = event.absoluteY - 185*1.6;
     
       // Calculate the distance from the center (0,0) to the point (x,y)
       let distance = Math.sqrt(x*x + y*y);
@@ -56,14 +68,16 @@ const Joystick = (props) => {
       });
     })
     .onFinalize(() => {
-      offsetX.value = 0;
-      offsetY.value = 0;
       pressed.value = false;
-      runOnJS(props.onChange)({
-        x: 0,
-        y: 0,
-        pressed: pressed.value,
-      });
+      if(!context.handsOn){
+        offsetX.value = 0;
+        offsetY.value = 0;
+        runOnJS(props.onChange)({
+          x: 0,
+          y: 0,
+          pressed: pressed.value,
+        });
+      }
     });
 
   const animatedStyles = useAnimatedStyle(() => ({

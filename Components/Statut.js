@@ -10,17 +10,23 @@ import GameContext from "../contexts/GameContext";
 
 
 export default function Statut()  {
-  const {  url, connected, setConnected, mode  } = useContext(GameContext)
-  
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(url);
-      setConnected(true)
-    } catch (err) {
-      setConnected(false)
-    } finally {
-    }
-  };
+  const { url, connected, setConnected, mode, apiKey } = useContext(GameContext);
+
+const fetchData = async () => {
+  try {
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: apiKey
+      }
+    });
+    setConnected(true);
+  } catch (error) {
+    setConnected(false);
+  } finally {
+    // Any cleanup or final actions can be performed here
+  }
+};
+
 
  
 

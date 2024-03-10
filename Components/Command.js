@@ -12,6 +12,7 @@ import { debounce } from "lodash";
 import GameContext from "../contexts/GameContext";
 import SpeedometerComponent from "./Controller/Speedometer";
 import { map } from "../utils/fonctions";
+import VehicleCursor from "./Model/Cursor";
 
 const Command = () => {
   const [joystick, setJoystick] = useState({
@@ -26,7 +27,14 @@ const Command = () => {
   const [direction, setDirection] = useState(90);
   const [prevDir, setPrevDirection] = useState(90);
   const context = useContext(GameContext);
+  const sendRequest = context.sendRequest;
 
+
+  const sendClacksState = async (state) => {
+    const url = `${context.url}/clacks?state=${state}`;
+    return await sendRequest(url, 'POST', { state: state });
+  };
+  
   const actions = [
     {
       name: "C",
@@ -54,23 +62,9 @@ const Command = () => {
       name: "Allumer les feux",
       icon: <FontAwesome5 name="lightbulb" size={24} color={colors.text} />,
       activeAction: async () =>
-        await axios.post(
-          `${context.url}/clacks?state=1`,
-          { state: 1 },
-          { timeout: 5000 }
-        ),
+        await sendClacksState(1),
       inactiveAction: async () =>
-        await axios.post(
-          `${context.url}/clacks?state=0`,
-          { state: 0 },
-          { timeout: 5000 }
-        ),
-    },
-    {
-      name: "C",
-      icon: <FontAwesome name="hand-stop-o" size={24} color="white" />,
-      activeAction: () => console.log("Claxonner activé"),
-      inactiveAction: () => console.log("Claxonner désactivé"),
+        await sendClacksState(0),
     },
     {
       name: "C",
@@ -84,27 +78,50 @@ const Command = () => {
     },
   ];
 
+  const actions2 = [
+    {
+      name: "C",
+      icon: <FontAwesome name="hand-stop-o" size={24} color="white" />,
+      activeAction: () => context.setHandsOn(true),
+      inactiveAction: () => context.setHandsOn(false),
+    },
+    {
+      name: "C",
+      activeAction: () => console.log("Claxonner activé"),
+      inactiveAction: () => console.log("Claxonner désactivé"),
+    },
+    {
+      name: "C",
+      activeAction: () => console.log("Claxonner activé"),
+      inactiveAction: () => console.log("Claxonner désactivé"),
+    },
+    {
+      name: "C",
+      activeAction: () => console.log("Claxonner activé"),
+      inactiveAction: () => console.log("Claxonner désactivé"),
+    },
+  ]
   async function sendSpeed(_speed) {
     try {
-      console.log("proulsionsended");
-      await axios.post(
-        `${context.url}/propulsion?speed=${_speed}`,
-        { speed: _speed },
-        { timeout: 5000 }
-      );
-    } catch (e) {}
+      console.log("propulsion sent");
+      const url = `${context.url}/propulsion?speed=${_speed}`;
+      await sendRequest(url, 'POST', { speed: _speed });
+    } catch (error) {
+      // console.error('Error:', error);
+    }
   }
-
+  
   async function sendDir(_dir) {
     try {
-      console.log("direction sended");
-      await axios.post(
-        `${context.url}/direction?value=${_dir}`,
-        { value: _dir },
-        { timeout: 5000 }
-      );
-    } catch (error) {}
+      console.log("direction sent");
+      const url = `${context.url}/direction?value=${_dir}`;
+      await sendRequest(url, 'POST', { value: _dir });
+    } catch (error) {
+      console.error('Error:', error);
+    }
   }
+  
+  
 
   useEffect(() => { sendSpeed(speed) }, [speed]);
 
@@ -146,16 +163,16 @@ const Command = () => {
       _speed = parseInt(_speed)
       consigne_angle = parseInt(consigne_angle);
 
-      console.log(speed != _speed)
+      console.log(_speed)
+      console.log(consigne_angle)
 
       setSpeed(_speed);
       if(_speed != speed){
       }
 
       setPrevDirection(consigne_angle);
-      if(direction != consigne_angle){
-        setDirection(consigne_angle)
-      }
+      setDirection(consigne_angle)
+      
 
     
 
@@ -182,8 +199,22 @@ const Command = () => {
         {/* <Thermostat speed={speed} /> */}
       </View>
       <View style={styles.visualContainer}>
+        <View style={{flex: 1}}>
+           <VehicleCursor speed={speed} rotation={direction} /> 
+          </View> 
         <View style={{ height: 200 }}>
           <SpeedometerComponent speed={speed} />
+        <View style={styles.actionsButtons}>
+          {actions2.map((action, index) => (
+            <Action
+              key={index}
+              name={action.name}
+              icon={action.icon}
+              activeAction={action.activeAction}
+              inactiveAction={action.inactiveAction}
+            />
+          ))}
+        </View>
         </View>
       </View>
     </View>
@@ -219,7 +250,8 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "flex-start",
+    justifyContent: "flex-end",
+    padding: 10,
     alignItems: "center",
   },
   text: {

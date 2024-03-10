@@ -11,17 +11,21 @@ import GameContext from "../contexts/GameContext";
 
 export default function Temperature()  {
   const [data, setData] = useState(null); // Initial state for data
-  const { url } = useContext(GameContext)
+  const { url, apiKey } = useContext(GameContext)
   const apiUrl = `${url}/temperature`;
 
   const fetchData = async () => {
-
     try {
-      const response = await axios.get(apiUrl);
+      const response = await axios.get(apiUrl, {
+        headers: {
+          Authorization: apiKey
+        }
+      });
       setData(response.data); // Update data state with the fetched data
-    } catch (err) {
-      // console.error('Error fetching data:', err);
+    } catch (error) {
+      // console.error('Error fetching data:', error);
     } finally {
+      // Any cleanup or final actions can be performed here
     }
   };
 
