@@ -1,4 +1,4 @@
-package it.innove.example.ble;
+package com.falacha.Boat;
 
 import android.os.Build;
 import android.os.Bundle;

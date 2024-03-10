@@ -1,4 +1,4 @@
-package it.innove.example.ble;
+package com.falacha.Boat;
 
 import android.app.Application;
 import android.content.res.Configuration;

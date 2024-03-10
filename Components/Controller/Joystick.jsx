@@ -13,6 +13,7 @@ import {
   GestureDetector,
   GestureHandlerRootView,
 } from "react-native-gesture-handler";
+import { colors } from "../../utils/colors";
 
 const Joystick = (props) => {
   const pressed = useSharedValue(false);
@@ -32,13 +33,24 @@ const Joystick = (props) => {
     .onChange((event) => {
       let x = event.translationX;
       let y = event.translationY;
-
-      
-      offsetX.value = x < -120 ? -120 : x > 120 ? 120 : x;
-      offsetY.value = y < -80 ? -80 : y > 80 ? 80 : y;
-
+    
+      // Calculate the distance from the center (0,0) to the point (x,y)
+      let distance = Math.sqrt(x*x + y*y);
+    
+      // If the distance is greater than the radius (80), adjust x and y
+      if (distance > 90) {
+        // Calculate the angle of the point
+        let angle = Math.atan2(y, x);
+    
+        // Set x and y to the point on the circle in the same angle
+        x = (90) * Math.cos(angle) ;
+        y = (90) * Math.sin(angle) ;
+      }
+    
+      offsetX.value = x;
+      offsetY.value = y;
       runOnJS(props.onChange)({
-        x: offsetX.value,
+        x:  offsetX.value,
         y: offsetY.value,
         pressed: pressed.value,
       });
@@ -56,7 +68,7 @@ const Joystick = (props) => {
 
   const animatedStyles = useAnimatedStyle(() => ({
     transform: [
-      { translateX: offsetX.value },
+      { translateX:  offsetX.value },
       { translateY: offsetY.value },
       // { scale: withTiming(pressed.value ? 0.9 : 1) },
     ],
@@ -82,16 +94,17 @@ const styles = StyleSheet.create({
     alignItems: "cente",
     justifyContent: "flex-end",
     height: "100%",
+    width: "100%"
   },
   controlArea: {
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "lightgray",
-    borderRadius: 10,
-    height: 160,
-    width: "30%",
+    backgroundColor: colors.secondaryBackground,
+    borderRadius: 588,
+    height: 185,
+    width: 185,
     marginBottom: 10,
-    marginLeft: 10,
+    // marginLeft: 10,
   },
   circle: {
     height: 80,

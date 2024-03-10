@@ -13,25 +13,15 @@ import { colors } from "./utils/colors";
 import { createStackNavigator } from "@react-navigation/stack";
 import HeaderBar from "./Components/HeaderBar";
 
-import BleManager from "react-native-ble-manager";
 import { useEffect } from "react";
 import { GameProvider } from "./contexts/GameContext";
 
-BleManager.start({ forceLegacy: true }).then(() => {
-  // Success code
-  console.log("Module initialized");
-});
 
 // const Tabs = createBottomTabNavigator();
 const Tabs = createStackNavigator();
 
 export default function App() {
-  useEffect(() => {
-    BleManager.scan([], 5, true).then(() => {
-      // Success code
-      console.log("Scan started");
-    });
-  }, []);
+  
   return (
     <View style={styles.container}>
       <GameProvider>

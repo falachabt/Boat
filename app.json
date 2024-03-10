@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Boat",
+    "name": "Boat G5",
     "slug": "Boat",
     "version": "1.0.0",
     "orientation": "landscape",
@@ -15,7 +15,15 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "runtimeVersion": {
+        "policy": "appVersion"
+      }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "683612ba-d6ca-4150-ba9d-03800a16e2a0"
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -27,13 +35,17 @@
         "android.permission.BLUETOOTH_ADMIN",
         "android.permission.BLUETOOTH_CONNECT"
       ],
-      "package": "com.falacha.Boat"
+      "package": "com.falacha.Boat",
+      "runtimeVersion": "1.0.0"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-router"
-    ]
+    ],
+    "updates": {
+      "url": "https://u.expo.dev/683612ba-d6ca-4150-ba9d-03800a16e2a0"
+    }
   }
 }

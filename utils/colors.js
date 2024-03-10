@@ -1,5 +1,5 @@
 export const colors = {
-    main: "#1a1a1a",
+    main: "#000",
     text: "#ffffff",
     accent: '#3498db', // Electric blue or neon green for highlighting
     buttons: '#9b59b6', // Deep purple or dark red for buttons

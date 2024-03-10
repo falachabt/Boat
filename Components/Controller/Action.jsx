@@ -18,7 +18,7 @@ const Action = ({ icon, name = "C" ,  activeAction =  () => {} , inactiveAction 
         <TouchableOpacity
             style={[styles.button, active ? styles.buttonActive : null]}
             onPress={handlePress}
-            activeOpacity={0.6}
+            // activeOpacity={0.6}
         >
             {icon ? ( // Si une icône est fournie, affichez l'icône
                 icon
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     button: {
         width: 50,
         height: 50,
-        borderRadius: 25,
+        borderRadius: 5,
         backgroundColor: colors.secondaryBackground,
         justifyContent: 'center',
         alignItems: 'center',

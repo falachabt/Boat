@@ -12,6 +12,7 @@ import Speedometer, {
 const SpeedometerComponent = ({speed = 0}) => {
   return (
     <Speedometer
+    // height={40}
     value={speed}
     fontFamily='squada-one'
   >

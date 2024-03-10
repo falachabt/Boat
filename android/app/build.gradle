@@ -81,9 +81,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace 'it.innove.example.ble'
+    namespace 'com.falacha.Boat'
     defaultConfig {
-        applicationId 'it.innove.example.ble'
+        applicationId 'com.falacha.Boat'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
