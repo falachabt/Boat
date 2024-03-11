@@ -3,7 +3,9 @@
       "preview": {
         "android": {
           "buildType": "apk"
-        }
+        },
+"channel": "staging",
+      "distribution": "internal"
       },
       "preview2": {
         "android": {
