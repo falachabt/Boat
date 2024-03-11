@@ -13,7 +13,6 @@
       "preview3": {
         "developmentClient": true
       },
-      "production": {}
 
     "base": {
       "node": "12.13.0",
