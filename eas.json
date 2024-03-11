@@ -61,6 +61,7 @@
     },
     "production": {
       "extends": "base",
+"channel": "production",
       "env": {
         "ENVIRONMENT": "production"
       }
