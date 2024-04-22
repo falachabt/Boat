@@ -33,6 +33,8 @@ const Joystick = (props) => {
     }
   }, [context.handsOn] )
 
+
+
   const pan = Gesture.Pan()
     .onBegin(() => {
       pressed.value = true;
@@ -61,6 +63,7 @@ const Joystick = (props) => {
     
       offsetX.value = x;
       offsetY.value = y;
+     
       runOnJS(props.onChange)({
         x:  offsetX.value,
         y: offsetY.value,
@@ -104,10 +107,10 @@ const Joystick = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 8,
+    flex: 1,
     alignItems: "cente",
-    justifyContent: "flex-end",
-    height: "100%",
+    // justifyContent: "flex-end",
+    height: "auto",
     width: "100%"
   },
   controlArea: {

@@ -11,8 +11,8 @@ import GameContext from "../contexts/GameContext";
 
 export default function Battery()  {
   const [data, setData] = useState(null); // Initial state for data
-  const { url, apiKey } = useContext(GameContext)
-  const apiUrl = `${url}/temperature`;
+  const {  apiKey, url2 } = useContext(GameContext)
+  const apiUrl = `${url2}/temperature`;
 
   const fetchData = async () => {
     try {

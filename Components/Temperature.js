@@ -11,8 +11,8 @@ import GameContext from "../contexts/GameContext";
 
 export default function Temperature()  {
   const [data, setData] = useState(null); // Initial state for data
-  const { url, apiKey } = useContext(GameContext)
-  const apiUrl = `${url}/temperature`;
+  const {  url2, apiKey } = useContext(GameContext)
+  const apiUrl = `${url2}/temperature`;
 
   const fetchData = async () => {
     try {

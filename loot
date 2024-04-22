@@ -1,0 +1,87 @@
+{
+  "build": {
+    
+    "preview2": {
+      "android": {
+        "gradleCommand": ":app:assembleRelease"
+      }
+    },
+    "preview3": {
+      "developmentClient": true
+    },
+
+    "base": {
+      "node": "18.17.1",
+      "yarn": "1.22.19",
+      "env": {
+        "EXAMPLE_ENV": "example value"
+      },
+      "android": {
+        "image": "default",
+        "env": {
+          "PLATFORM": "android"
+        }
+      },
+      "ios": {
+        "image": "latest",
+        "env": {
+          "PLATFORM": "ios"
+        }
+      }
+    },
+    "preview": {
+      "extends": "base",
+      "developmentClient": true,
+      "android": {
+        "buildType": "apk"
+      },
+      "channel": "staging",
+      "distribution": "internal"
+    },
+    "development": {
+      "extends": "base",
+      "developmentClient": true,
+      "env": {
+        "ENVIRONMENT": "development"
+      },
+      "android": {
+        "distribution": "internal",
+        "withoutCredentials": true
+      },
+      "ios": {
+        "simulator": true
+      }
+    },
+    "staging": {
+      "extends": "base",
+      "env": {
+        "ENVIRONMENT": "staging"
+      },
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "production": {
+      "extends": "base",
+      "channel": "production",
+      "env": {
+        "ENVIRONMENT": "production"
+      }
+    }
+  }
+}
+
+
+
+{
+    "expo": {
+      "extra": {
+        "eas": {
+          "projectId": "2156e839-248a-4a99-9d90-ca36f36726dd"
+        }
+      },
+      "owner": "falacha"
+    }
+  }
+  

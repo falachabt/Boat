@@ -1,28 +1,16 @@
 {
   "build": {
-      "preview": {
-        "android": {
-"image": "default",
-          "buildType": "apk"
-        },
-"channel": "staging",
+    "preview": {
+      "android": {
+        "image": "default",
+        "buildType": "apk"
+      },
+      "channel": "staging",
       "distribution": "internal"
-      },
-      "preview2": {
-        "android": {
-          "gradleCommand": ":app:assembleRelease"
-        }
-      },
-      "preview3": {
-        "developmentClient": true
-      },
-
+    },
     "base": {
       "node": "12.13.0",
       "yarn": "1.22.5",
-      "env": {
-        "EXAMPLE_ENV": "example value"
-      },
       "android": {
         "image": "default",
         "env": {
@@ -39,6 +27,7 @@
     "development": {
       "extends": "base",
       "developmentClient": true,
+      "distribution": "internal",
       "env": {
         "ENVIRONMENT": "development"
       },
@@ -47,7 +36,8 @@
         "withoutCredentials": true
       },
       "ios": {
-        "simulator": true
+        "simulator": true,
+        "distribution": "internal"
       }
     },
     "staging": {
@@ -62,7 +52,8 @@
     },
     "production": {
       "extends": "base",
-"channel": "production",
+      "channel": "production",
+      "distribution": "internal",
       "env": {
         "ENVIRONMENT": "production"
       }

@@ -10,15 +10,19 @@ import GameContext from "../contexts/GameContext";
 
 
 export default function Statut()  {
-  const { url, connected, setConnected, mode, apiKey } = useContext(GameContext);
+  const { url, url2,  connected, setConnected, mode, apiKey } = useContext(GameContext);
 
 const fetchData = async () => {
   try {
-    const response = await axios.get(url, {
+    const response = await axios.get(url2, {
       headers: {
         Authorization: apiKey
       }
     });
+
+    if(response.data.status == 2){
+      console.log("status ok");
+    }
     setConnected(true);
   } catch (error) {
     setConnected(false);

@@ -3,7 +3,7 @@ import { View, StyleSheet, Text } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome } from "@expo/vector-icons";
 import Action from "./Controller/Action";
 import Joystick from "./Controller/Joystick";
 import { colors } from "../utils/colors";
@@ -13,6 +13,7 @@ import GameContext from "../contexts/GameContext";
 import SpeedometerComponent from "./Controller/Speedometer";
 import { map } from "../utils/fonctions";
 import VehicleCursor from "./Model/Cursor";
+import { WebView } from "react-native-webview";
 
 const Command = () => {
   const [joystick, setJoystick] = useState({
@@ -29,22 +30,21 @@ const Command = () => {
   const context = useContext(GameContext);
   const sendRequest = context.sendRequest;
 
-
   const sendClacksState = async (state) => {
-    const url = `${context.url}/clacks?state=${state}`;
-    return await sendRequest(url, 'POST', { state: state });
+    // const url = `${context.url}/clacks?state=${state}`;
+    context.setClacks(state)
   };
-  
+
   const actions = [
     {
       name: "C",
-      activeAction: () => console.log("Power On"),
-      inactiveAction: () => console.log("Power Off"),
+      activeAction: () => context.setOn(true),
+      inactiveAction: () => context.setOn(false),
       icon: <Ionicons name="power" size={24} color="white" />,
     },
     {
       name: "C",
-      icon: <AntDesign name="sound" size={24} color="white" />,
+      icon: <FontAwesome5 name="lightbulb" size={24} color={colors.text} />,
       activeAction: () => console.log("Claxonner activé"),
       inactiveAction: () => console.log("Claxonner désactivé"),
     },
@@ -60,11 +60,9 @@ const Command = () => {
     },
     {
       name: "Allumer les feux",
-      icon: <FontAwesome5 name="lightbulb" size={24} color={colors.text} />,
-      activeAction: async () =>
-        await sendClacksState(1),
-      inactiveAction: async () =>
-        await sendClacksState(0),
+      icon: <AntDesign name="sound" size={24} color="white" /> ,
+      activeAction: async () => await sendClacksState(1),
+      inactiveAction: async () => await sendClacksState(0),
     },
     {
       name: "C",
@@ -100,32 +98,41 @@ const Command = () => {
       activeAction: () => console.log("Claxonner activé"),
       inactiveAction: () => console.log("Claxonner désactivé"),
     },
-  ]
+  ];
+
   async function sendSpeed(_speed) {
     try {
       console.log("propulsion sent");
       const url = `${context.url}/propulsion?speed=${_speed}`;
-      await sendRequest(url, 'POST', { speed: _speed });
+      await sendRequest(url, "GET", { speed: _speed });
+      console.log("sended");
     } catch (error) {
       // console.error('Error:', error);
     }
   }
-  
+
   async function sendDir(_dir) {
     try {
       console.log("direction sent");
       const url = `${context.url}/direction?value=${_dir}`;
-      await sendRequest(url, 'POST', { value: _dir });
+      await sendRequest(url, "GET", { value: _dir });
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
     }
   }
-  
-  
 
-  useEffect(() => { sendSpeed(speed) }, [speed]);
+  // useEffect(() => {
+  //  sendSpeed(speed)
+  //  sendDir(direction)
 
-  useEffect(() => {sendDir(direction)}, [direction]);
+  // return  () => {
+ 
+  // } 
+  // }, [speed, direction]);
+
+  useEffect(() => {
+    // sendDir(direction);
+  }, [direction]);
 
   const onSpeedUpChange = useCallback(
     debounce(async (values) => {
@@ -160,24 +167,21 @@ const Command = () => {
         }
       }
 
-      _speed = parseInt(_speed)
+      _speed = parseInt(_speed);
+
       consigne_angle = parseInt(consigne_angle);
 
-      console.log(_speed)
-      console.log(consigne_angle)
+      console.log(_speed);
+      console.log(consigne_angle);
+
 
       setSpeed(_speed);
-      if(_speed != speed){
+      if (_speed != speed) {
       }
 
       setPrevDirection(consigne_angle);
-      setDirection(consigne_angle)
-      
-
-    
-
-     
-    }, 100),
+      setDirection(consigne_angle);
+    }, 2),
     [joystick]
   );
 
@@ -195,26 +199,49 @@ const Command = () => {
             />
           ))}
         </View>
-        <Joystick onChange={onSpeedUpChange} />
+        <View style={{ flex: 0.5 }}>
+          <Joystick onChange={onSpeedUpChange} />
+        </View>
         {/* <Thermostat speed={speed} /> */}
       </View>
       <View style={styles.visualContainer}>
-        <View style={{flex: 1}}>
-           <VehicleCursor speed={speed} rotation={direction} /> 
-          </View> 
+        <View style={{ flex: 1 }}>
+          <VehicleCursor speed={speed} rotation={direction} />
+          <View style={{ display: "none" }}>
+            <WebView
+            renderError={ (error) => {} }
+              source={{ uri: `${context.url}/propulsion?speed=${ parseInt(map(speed, 0, 180, 0, 180))}` }}
+            />
+            <WebView
+            renderError={ (error) => {} }
+              source={{ uri: `${context.url}/direction?value=${direction}` }}
+            />
+            <WebView
+            renderError={ (error) => {} }
+              source={{ uri: `${context.url2}/clacks?state=${context.clacks}` }}
+            />
+            <WebView
+            renderError={ (error) => {} }
+              source={{
+
+                uri: `${context.url}/start?state=${context.on ? 1 : 0}`,
+              }}
+            /> 
+          </View>
+        </View>
         <View style={{ height: 200 }}>
           <SpeedometerComponent speed={speed} />
-        <View style={styles.actionsButtons}>
-          {actions2.map((action, index) => (
-            <Action
-              key={index}
-              name={action.name}
-              icon={action.icon}
-              activeAction={action.activeAction}
-              inactiveAction={action.inactiveAction}
-            />
-          ))}
-        </View>
+          <View style={styles.actionsButtons}>
+            {actions2.map((action, index) => (
+              <Action
+                key={index}
+                name={action.name}
+                icon={action.icon}
+                activeAction={action.activeAction}
+                inactiveAction={action.inactiveAction}
+              />
+            ))}
+          </View>
         </View>
       </View>
     </View>
@@ -233,13 +260,14 @@ const styles = StyleSheet.create({
   },
   actionsContainer: {
     flex: 0.5,
-    flexDirection: "column",
-    flexWrap: "wrap",
-    justifyContent: "",
-    alignItems: "center",
+    // display: "flex",
+    // flexDirection: "column",
+    // flexWrap: "wrap",
+    // justifyContent: "flex-start",
+    // alignItems: "center",
   },
   actionsButtons: {
-    flex: 0.5,
+    flex: 0.4,
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 12,
