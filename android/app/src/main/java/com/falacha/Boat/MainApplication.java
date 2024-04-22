@@ -1,4 +1,4 @@
-package com.falacha.Boat;
+package com.falacha.boat;
 
 import android.app.Application;
 import android.content.res.Configuration;

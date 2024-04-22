@@ -81,9 +81,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace 'com.falacha.Boat'
+    namespace 'com.falacha.boat'
     defaultConfig {
-        applicationId 'com.falacha.Boat'
+        applicationId 'com.falacha.boat'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
