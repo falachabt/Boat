@@ -29,7 +29,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.falacha.Boat",
+      "package": "com.falacha.boat",
       "runtimeVersion": "1.0.0"
     },
     "web": {
