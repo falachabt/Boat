@@ -22,7 +22,8 @@
         "env": {
           "PLATFORM": "ios"
         }
-      }
+      },
+      "channel": "base"
     },
     "development": {
       "extends": "base",
@@ -38,7 +39,8 @@
       "ios": {
         "simulator": true,
         "distribution": "internal"
-      }
+      },
+      "channel": "development"
     },
     "staging": {
       "extends": "base",
@@ -48,7 +50,8 @@
       "distribution": "internal",
       "android": {
         "buildType": "apk"
-      }
+      },
+      "channel": "staging"
     },
     "production": {
       "extends": "base",
