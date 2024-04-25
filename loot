@@ -1,0 +1,47 @@
+{
+  "expo": {
+    "name": "Boat",
+    "slug": "Boat",
+    "version": "1.0.0",
+    "orientation": "landscape",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "runtimeVersion": {
+        "policy": "appVersion"
+      }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "804e3a4e-3ed7-4004-8ef1-c68b6e359ee6"
+      }
+    },
+    "owner": "falacha",
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.falacha.Boat",
+      "runtimeVersion": "1.0.0"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "updates": {
+      "url": "https://u.expo.dev/804e3a4e-3ed7-4004-8ef1-c68b6e359ee6"
+    }
+  }
+}

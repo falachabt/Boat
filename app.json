@@ -1,0 +1,16 @@
+{
+  "expo": {
+    "name": "boat",
+    "slug": "boat",
+    "version": "1.0.0",
+    "orientation": "landscape",
+    "sdkVersion": "49.0.0",
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    "android": {
+      "package": "com.falacha.boat"
+    }
+  }
+}
