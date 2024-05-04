@@ -17,7 +17,12 @@ const GameContext = createContext({
   sendRequest: () => {},
   requestWithIncome: () => {},
   clacks : 0, 
-  setClacks:  () => {} 
+  setClacks:  () => {} , 
+
+  fan : false, 
+  setFan :  () => {}, 
+  fanAuto : false, 
+  setFanAuto:  () => {},
 });
 
 // Create a provider component
@@ -28,7 +33,11 @@ export const GameProvider = ({ children }) => {
   const [url2, setUrl2] = useState(`http://${ip2}`); // Initial url state
   const [connected, setConnected] = useState(false);
   const [mode, setMode] = useState("Wifi");
-  const [on, setOn] = useState(false)
+  
+  const [on, setOn] = useState(false);
+  const [fan, setFan] = useState(false);
+  const [fanAuto, setFanAuto] = useState(false);
+
   const [deviceName, setDeviceName] = useState("");
   const [handsOn, setHandsOn] = useState(false);
   const [clacks, setClacks] = useState(0);
@@ -81,8 +90,13 @@ export const GameProvider = ({ children }) => {
         sendRequest,
         url,
         url2,
+
         clacks, 
         setClacks, 
+        fan, 
+        setFan,
+        fanAuto, 
+        setFanAuto,
         
         setUrl,
         ip,
@@ -93,12 +107,17 @@ export const GameProvider = ({ children }) => {
         setMode,
         deviceName,
         setDeviceName,
-        handsOn,
+        handsOn, // to keep the joystick at the current position 
         setHandsOn,
         apiKey,
         requestWithIncome,
+
         on, 
-        setOn
+        setOn,
+        
+     
+        clacks, 
+        setClacks, 
       }}
     >
       {children}

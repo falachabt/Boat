@@ -11,6 +11,11 @@
     ],
     "android": {
       "package": "com.falacha.boat"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "804e3a4e-3ed7-4004-8ef1-c68b6e359ee6"
+      }
     }
   }
 }

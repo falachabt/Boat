@@ -12,7 +12,7 @@ import GameContext from "../contexts/GameContext";
 export default function Battery()  {
   const [data, setData] = useState(null); // Initial state for data
   const {  apiKey, url2 } = useContext(GameContext)
-  const apiUrl = `${url2}/temperature`;
+  const apiUrl = `${url2}/battery`;
 
   const fetchData = async () => {
     try {
@@ -21,11 +21,9 @@ export default function Battery()  {
           Authorization: apiKey
         }
       });
-      setData(response.data); // Update data state with the fetched data
+      setData(response.data); 
     } catch (error) {
-      // console.error('Error fetching data:', error);
     } finally {
-      // Any cleanup or final actions can be performed here
     }
   };
 
@@ -42,7 +40,7 @@ export default function Battery()  {
     >
       <View style={{ display: "flex", flexDirection: "row",  justifyContent: "center",  alignItems: "center", gap: 8 }}>
         <Text>
-        {data?.humidity && data?.humidity > 12 ? (
+        {data?.level && data?.level > 12 ? (
           <Ionicons name="battery-full" size={24}  color={colors.accent} />
           ) : (
             <Ionicons
@@ -54,7 +52,7 @@ export default function Battery()  {
             </Text> 
 
         <Text style={{ color: colors.text, marginBottom:3 }}>
-          {data ? data.humidity : "0"}%
+          {data ? data?.level : "0"}%
         </Text>
       </View>
     </View>

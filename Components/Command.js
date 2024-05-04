@@ -13,7 +13,9 @@ import GameContext from "../contexts/GameContext";
 import SpeedometerComponent from "./Controller/Speedometer";
 import { map } from "../utils/fonctions";
 import VehicleCursor from "./Model/Cursor";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { WebView } from "react-native-webview";
+import { MaterialIcons } from '@expo/vector-icons';
 
 const Command = () => {
   const [joystick, setJoystick] = useState({
@@ -85,18 +87,24 @@ const Command = () => {
     },
     {
       name: "C",
+      // icon: <MaterialCommunityIcons name="coolant-temperature" size={24} color="white" />,
       activeAction: () => console.log("Claxonner activé"),
       inactiveAction: () => console.log("Claxonner désactivé"),
     },
     {
       name: "C",
-      activeAction: () => console.log("Claxonner activé"),
-      inactiveAction: () => console.log("Claxonner désactivé"),
+      icon: <MaterialCommunityIcons name="fan" size={24} color="white" />,
+      forceUpdateValue : false,
+      forceUpdateTrigger : context.fanAuto,
+      activeAction: () => context.setFan(true),
+      inactiveAction: () => context.setFan(false),
+      
     },
     {
       name: "C",
-      activeAction: () => console.log("Claxonner activé"),
-      inactiveAction: () => console.log("Claxonner désactivé"),
+      icon:  <MaterialCommunityIcons name="fan-auto" size={24} color="white" />,
+      activeAction: () => { context.setFanAuto(true); context.setFan(false) },
+      inactiveAction: () => context.setFanAuto(false),
     },
   ];
 
@@ -210,7 +218,7 @@ const Command = () => {
           <View style={{ display: "none" }}>
             <WebView
             renderError={ (error) => {} }
-              source={{ uri: `${context.url}/propulsion?speed=${ parseInt(map(speed, 0, 180, 0, 180))}` }}
+              source={{ uri: `${context.url}/propulsion?speed=${ parseInt(map(speed, 0, 180, 100, 150))}` }}
             />
             <WebView
             renderError={ (error) => {} }
@@ -224,7 +232,21 @@ const Command = () => {
             renderError={ (error) => {} }
               source={{
 
-                uri: `${context.url}/start?state=${context.on ? 1 : 0}`,
+                uri: `${context.url}/state?state=${context.on ? "true" : "false"}`,
+              }}
+            /> 
+            <WebView
+            renderError={ (error) => {} }
+              source={{
+
+                uri: `${context.url}/fan?state=${context.fan ? "true" : "false"}`,
+              }}
+            /> 
+            <WebView
+            renderError={ (error) => {} }
+              source={{
+
+                uri: `${context.url}/fanauto?state=${context.fanAuto ? "true" : "false"}`,
               }}
             /> 
           </View>
@@ -239,6 +261,8 @@ const Command = () => {
                 icon={action.icon}
                 activeAction={action.activeAction}
                 inactiveAction={action.inactiveAction}
+                forceUpdateTrigger={action.forceUpdateTrigger}
+                forceUpdateValue={action.forceUpdateValue}
               />
             ))}
           </View>

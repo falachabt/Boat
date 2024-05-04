@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   Modal,
@@ -13,109 +13,40 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { colors } from "../utils/colors";
 import GameContext from "../contexts/GameContext";
 import { Colors } from "react-native/Libraries/NewAppScreen";
+import { AntDesign } from "@expo/vector-icons";
 
 const MyModal = () => {
-  const { mode, setMode, deviceName, setDeviceName, ip, setIp} = useContext(GameContext)
-    const [modalVisible, setModalVisible] = useState(false);
-  const [textInputValue, setTextInputValue] = useState( mode == "Wifi" ? ip : deviceName );
-  const [selectedOption, setSelectedOption] = useState(mode);
+  const { connected } = useContext(GameContext);
+  const [modalVisible, setModalVisible] = useState(false);
 
-
-  const handleInputChange = (text) => {
-    setTextInputValue(text);
-  };
-
-  const handleOptionChange = (option) => {
-    setSelectedOption(option);
-  };
-
-  const handleModalClose = () => {
-    setModalVisible(false);
-    // You can do something with the input value and selected option here
-
-    if(selectedOption == "Wifi"){
-        setIp(textInputValue)
-    }else{
-        setDeviceName(textInputValue)
-    }
-
-    setMode(selectedOption)
-  };
+  useEffect(() => {
+    setModalVisible(!connected);
+  }, [connected]);
 
   return (
     <View style={styles.container}>
-      <Text style = {{ paddingVertical: 4, paddingHorizontal: 4, backgroundColor: colors.secondaryBackground , borderRadius: 5 }} onPress={() => setModalVisible(true)}>
-        {" "}
-        <Ionicons name="settings-sharp" size={24} color={colors.accent} />{" "}
-      </Text>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
+      <Modal animationType="slide" transparent={true} visible={modalVisible}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <View style={styles.radioContainer}>
-              <Text style={{ marginRight: 10 , color: colors.text}}> Mode : </Text>
-              <View style={styles.radioButton}>
-                <Text
-                  onPress={() => handleOptionChange("Wifi")}
-                  style={
-                    selectedOption === "Wifi"
-                      ? styles.radioTextSelected
-                      : styles.radioText
-                  }
-                >
-                  Wifi
-                </Text>
-              </View>
-              <View style={styles.radioButton}>
-                <Text
-                  onPress={() => handleOptionChange("Bluetooth")}
-                  style={
-                    selectedOption === "Bluetooth"
-                      ? styles.radioTextSelected
-                      : styles.radioText
-                  }
-                >
-                  Bluetooth
-                </Text>
-              </View>
+              <Text style={styles.label}>Can not link with the boat</Text>
             </View>
-            <Text style={styles.label}>
-              {" "}
-              {selectedOption == "Wifi"
-                ? "Enter Ip Adress"
-                : "Enter device name"}{" "}
-            </Text>
-            <TextInput
-              style={styles.input}
-              onChangeText={handleInputChange}
-              value={textInputValue}
-              placeholder= { mode == "Wifi" ? "eg:192.168.240.226" : "eg:My Boat"}
-              defaultValue={ mode == "Wifi" ? ip  : deviceName }
-            />
 
             <View
               style={{
                 display: "flex",
-                flexDirection: "row",
-                justifyContent: "flex-end",
-                gap: 15,
+                justifyContent: "center",
+                alignItems: "center",
+                marginBottom: 20,
               }}
             >
-              <Button
-                title="Close"
-                onPress={ () => { setModalVisible(false);} }
-                style={{ flex: 1 }}
-                color={colors.alerts}
-              />
-              <Button
-                title="Save"
-                onPress={handleModalClose}
-                color={colors.accent}
-              />
+              <Text>
+                <AntDesign name="disconnect" size={24} color={colors.alerts} />
+              </Text>
+            </View>
+
+            <View style={styles.radioContainer}>
+              <Text style={styles.label}> Check if the boat is on </Text>
             </View>
           </View>
         </View>
@@ -138,7 +69,7 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: colors.main,
-    borderColor: colors.accent, 
+    borderColor: colors.accent,
     borderWidth: 1,
     padding: 20,
     borderRadius: 10,
@@ -148,7 +79,12 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     marginBottom: 10,
-    color: colors.text
+    color: colors.text,
+    width: "50%",
+    textAlign: "center",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
   input: {
     borderWidth: 1,
@@ -156,22 +92,23 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     marginBottom: 10,
-    color: colors.text
+    color: colors.text,
   },
   radioContainer: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
     marginBottom: 10,
     borderBottomWidth: 1,
-    borderBottomColor: colors.accent, 
-    padding: 9
+    borderBottomColor: colors.accent,
+    padding: 9,
   },
   radioButton: {
     marginRight: 20,
   },
   radioText: {
     fontSize: 16,
-    color: colors.text
+    color: colors.text,
   },
   radioTextSelected: {
     fontSize: 16,
